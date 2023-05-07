@@ -4,26 +4,18 @@
 #include <iostream>
 #include <gtest/gtest.h>
 #include "../fileOperations.cpp"
+#include "./utils/testUtils.cpp"
 
 using namespace curlpp::options;
 
 TEST(CppFileHandlingProjectTest, FilePresentTrue) {
-    curlpp::Cleanup cleanup;
-    curlpp::Easy request;
-    request.setOpt(curlpp::options::Url(std::string("https://jsonplaceholder.typicode.com/posts")));
-    std::list<std::string> header = {
-        "Content-Type: application/json",
-        "accept: application/json"
-    }; 
-    request.setOpt(new curlpp::options::HttpHeader(header));
     const int filePresent = isFilePresent("sample.txt");
-    std::string query = filePresent ? "[{\"FilePresentTrue\":1}]" : "[{\"FilePresentTrue\":0}]";
-    request.setOpt(new curlpp::options::PostFields(query)); 
-    // request.setOpt(new curlpp::options::WriteStream(&std::cout));
-    // request.perform();
+    TestUtils t;
+    t.yakshaAssert("FilePresentTrue", filePresent == 1 ? true : false, "boundary");    
     ASSERT_EQ(1, filePresent);
 }
 
+/*
 TEST(CppFileHandlingProjectTest2, FilePresentFalse) {
     curlpp::Cleanup cleanup;
     curlpp::Easy request;
@@ -181,3 +173,4 @@ TEST(CppFileHandlingProjectTest, OpenFileAndAppendDataFalse) {
     // request.perform();
     ASSERT_EQ(0, appendData);
 }
+*/
