@@ -4,11 +4,12 @@
 #include <curlpp/cURLpp.hpp>
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
-#include <iostream>
 #include <gtest/gtest.h>
+#include <nlohmann/json.hpp>
 #include "testResults.cpp"
 #include "testCaseResult.cpp"
 
+using json = nlohmann::json;
 using namespace curlpp::options;
 using namespace std;
 
@@ -21,24 +22,24 @@ class TestUtils {
         string customData;
 	
 		string readCustomFileData(string filePath) {
-			ifstream fin(filePath);
-			string fileData = "";
+			ifstream inputFile(filePath);
+			string line;
+			string name;
 			try {
-				string name;
-				while (! fin.eof() && fin >> name) {
-					fileData += name;
+				while (inputFile >> name) {
+					cout<<name;
+					line += name;
 				}
 			} catch(...) {
 				cout<<"There was an error !\n";
 			}
-			return fileData;
+			return line;
 		}
 
 		void yakshaAssert(string testName, bool result, string testType) {
 			TestResults testResults;
 			map<std::string, TestCaseResult> testCaseResults;
-			// customData = readCustomFileData("./././custom.ih");
-			customData = "sdfgsdgfsdgsdgsdgsdg";
+			customData = readCustomFileData("../custom.ih");
 			string resultStatus = "Failed";
 			int resultScore = 0;
 			if (result) {
@@ -85,7 +86,7 @@ class TestUtils {
 			request.setOpt(new curlpp::options::WriteStream(&std::cout));
 			request.perform();
 			
-			cout<<finalResult;
+			// cout<<finalResult;
 			// System.out.println(finalResult);
 			// HttpClient client = HttpClient.newHttpClient();
 		}
